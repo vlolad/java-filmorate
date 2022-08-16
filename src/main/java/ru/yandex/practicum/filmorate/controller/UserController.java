@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -14,11 +13,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
 
     private final Map<Integer, User> users = new HashMap<>();
     private int id; //Генератор id для пользователей
-    private final static Logger log = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping
     public List<User> findAll() {
@@ -28,10 +27,7 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        user.setLogin(user.getLogin().trim()); // Убирает лишние пробелы перед и после логина, на валидацию не влияет
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
+        checkName(user);
         user.setId(insertId());
         log.info("Create new user: {}", user);
         users.put(user.getId(), user);
@@ -45,9 +41,7 @@ public class UserController {
             log.warn("User with such id not found.");
             throw new NotFoundException("User not found.");
         }
-        if (user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
+        checkName(user);
         log.info("Update user: {}", user);
         users.put(user.getId(), user);
         return user;
@@ -56,5 +50,12 @@ public class UserController {
     private int insertId(){
         id++;
         return id;
+    }
+
+    private void checkName(User user) {
+        user.setLogin(user.getLogin().trim()); // Убирает лишние пробелы перед и после логина, на валидацию не влияет
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 }
