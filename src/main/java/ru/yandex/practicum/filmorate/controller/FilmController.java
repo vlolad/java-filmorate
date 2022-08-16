@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,8 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
+    public Film create(@Valid @RequestBody Film film) {
+        checkInput(film);
         film.setId(insertId());
         log.info("Add new film: {}", film);
         films.put(film.getId(), film);
@@ -34,7 +37,12 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) {
+    public Film update(@Valid @RequestBody Film film) {
+        if (!films.containsKey(film.getId())) {
+            log.warn("Film with such id not found.");
+            throw new NotFoundException("Film not found");
+        }
+        checkInput(film);
         log.info("Put film: {}", film);
         films.put(film.getId(), film);
         return film;
@@ -43,5 +51,21 @@ public class FilmController {
     private int insertId(){
         id++;
         return id;
+    }
+
+    private void checkInput (Film film) {
+        if (film.getReleaseDate().isBefore(film.getMinReleaseDate())) {
+            log.error("Film release date is before minimal release date.");
+            throw new ValidationException("Film is unusually old.");
+        }
+        /* if (film.getName().isBlank()) {
+            throw new ValidationException("Name cannot be empty.");
+        } else if (film.getDescription().length() > 200) {
+            throw new ValidationException("Description should be less that 200 symbols.");
+        } else if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Film is unusually old.");
+        } else if (film.getDuration() > 0) {
+            throw new ValidationException("Film duration should be more than 0 minutes.");
+        } */
     }
 }

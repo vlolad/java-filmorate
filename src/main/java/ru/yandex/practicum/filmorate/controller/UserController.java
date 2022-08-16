@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,10 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
+        if (user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
         user.setId(insertId());
         log.info("Create new user: {}", user);
         users.put(user.getId(), user);
@@ -34,7 +39,14 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User user) {
+    public User update(@Valid @RequestBody User user) {
+        if (!users.containsKey(user.getId())) {
+            log.warn("User with such id not found.");
+            throw new NotFoundException("User not found.");
+        }
+        if (user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
         log.info("Update user: {}", user);
         users.put(user.getId(), user);
         return user;
