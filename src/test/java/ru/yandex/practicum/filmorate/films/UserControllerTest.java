@@ -11,12 +11,16 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserControllerTest {
 
+    static{
+        Locale.setDefault(new Locale("en"));
+    }
     private UserController controller;
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
@@ -65,13 +69,13 @@ public class UserControllerTest {
         Set<ConstraintViolation<User>> violations = validator.validate(user3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("должно иметь формат адреса электронной почты", violations.iterator().next().getMessage(),
+        assertEquals("must be a well-formed email address", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
         user3.setEmail("a.r?u@");
         Set<ConstraintViolation<User>> violations2 = validator.validate(user3);
         assertEquals(1, violations2.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("должно иметь формат адреса электронной почты", violations2.iterator().next().getMessage(),
+        assertEquals("must be a well-formed email address", violations2.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
@@ -82,7 +86,7 @@ public class UserControllerTest {
         Set<ConstraintViolation<User>> violations = validator.validate(user3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("должно соответствовать \"^\\s*\\w+\\s*$\"", violations.iterator().next().getMessage(),
+        assertEquals("must match \"^\\s*\\w+\\s*$\"", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
@@ -102,7 +106,7 @@ public class UserControllerTest {
         Set<ConstraintViolation<User>> violations = validator.validate(user3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("должно содержать прошедшую дату", violations.iterator().next().getMessage(),
+        assertEquals("must be a past date", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
@@ -113,7 +117,7 @@ public class UserControllerTest {
         Set<ConstraintViolation<User>> violations = validator.validate(user3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("должно содержать прошедшую дату", violations.iterator().next().getMessage(),
+        assertEquals("must be a past date", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 

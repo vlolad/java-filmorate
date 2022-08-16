@@ -11,12 +11,16 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmControllerTest {
 
+    static{
+        Locale.setDefault(new Locale("en"));
+    }
     private FilmController controller;
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
@@ -64,7 +68,7 @@ public class FilmControllerTest {
         Set<ConstraintViolation<Film>> violations = validator.validate(test3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("не должно быть пустым", violations.iterator().next().getMessage(),
+        assertEquals("must not be blank", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
@@ -78,7 +82,7 @@ public class FilmControllerTest {
         Set<ConstraintViolation<Film>> violations = validator.validate(test3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("размер должен находиться в диапазоне от 0 до 200", violations.iterator().next().getMessage(),
+        assertEquals("size must be between 0 and 200", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
@@ -104,7 +108,7 @@ public class FilmControllerTest {
         Set<ConstraintViolation<Film>> violations = validator.validate(test3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("размер должен находиться в диапазоне от 0 до 200", violations.iterator().next().getMessage(),
+        assertEquals("size must be between 0 and 200", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
@@ -124,7 +128,7 @@ public class FilmControllerTest {
         Set<ConstraintViolation<Film>> violations = validator.validate(test3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("должно быть больше 0", violations.iterator().next().getMessage(),
+        assertEquals("must be greater than 0", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
@@ -135,7 +139,7 @@ public class FilmControllerTest {
         Set<ConstraintViolation<Film>> violations = validator.validate(test3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("должно быть больше 0", violations.iterator().next().getMessage(),
+        assertEquals("must be greater than 0", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
