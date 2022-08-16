@@ -152,4 +152,15 @@ public class FilmControllerTest {
                 "Ожидалось исключение NotFoundException");
         assertEquals("404 NOT_FOUND \"Film not found.\"", exc.getMessage());
     }
+
+    @Test
+    public void testCreateNullReleaseDate() {
+        Film test3 = test1;
+        test3.setReleaseDate(null);
+        Set<ConstraintViolation<Film>> violations = validator.validate(test3);
+        assertEquals(1, violations.size(),
+                "Отсутствует ошибка валидации.");
+        assertEquals("must not be null", violations.iterator().next().getMessage(),
+                "Ожидалась иная ошибка валидации.");
+    }
 }

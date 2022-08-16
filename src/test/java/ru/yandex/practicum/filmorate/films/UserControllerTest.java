@@ -106,18 +106,18 @@ public class UserControllerTest {
         Set<ConstraintViolation<User>> violations = validator.validate(user3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("must be a past date", violations.iterator().next().getMessage(),
+        assertEquals("must be a date in the past or in the present", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
     @Test
-    public void testBornTodayUser() {
+    public void testBornTomorrowUser() {
         User user3 = user1;
-        user3.setBirthday(LocalDate.now());
+        user3.setBirthday(LocalDate.now().plusDays(1));
         Set<ConstraintViolation<User>> violations = validator.validate(user3);
         assertEquals(1, violations.size(),
                 "Отсутствует ошибка валидации.");
-        assertEquals("must be a past date", violations.iterator().next().getMessage(),
+        assertEquals("must be a date in the past or in the present", violations.iterator().next().getMessage(),
                 "Ожидалась иная ошибка валидации.");
     }
 
