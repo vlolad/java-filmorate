@@ -57,14 +57,5 @@ public class FilmController {
             log.error("Film release date is before minimal release date.");
             throw new ValidationException("Film is unusually old.");
         }
-        /* if (film.getName().isBlank()) {
-            throw new ValidationException("Name cannot be empty.");
-        } else if (film.getDescription().length() > 200) {
-            throw new ValidationException("Description should be less that 200 symbols.");
-        } else if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            throw new ValidationException("Film is unusually old.");
-        } else if (film.getDuration() > 0) {
-            throw new ValidationException("Film duration should be more than 0 minutes.");
-        } */
     }
 }
