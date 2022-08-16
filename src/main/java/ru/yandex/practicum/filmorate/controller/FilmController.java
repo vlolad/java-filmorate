@@ -40,7 +40,7 @@ public class FilmController {
     public Film update(@Valid @RequestBody Film film) {
         if (!films.containsKey(film.getId())) {
             log.warn("Film with such id not found.");
-            throw new NotFoundException("Film not found");
+            throw new NotFoundException("Film not found.");
         }
         checkInput(film);
         log.info("Put film: {}", film);

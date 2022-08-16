@@ -28,7 +28,8 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        if (user.getName().isBlank()) {
+        user.setLogin(user.getLogin().trim()); // Убирает лишние пробелы перед и после логина, на валидацию не влияет
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         user.setId(insertId());

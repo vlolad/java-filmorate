@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Film {
 
+    @EqualsAndHashCode.Exclude
     private Integer id;
     @NotBlank
     private String name;

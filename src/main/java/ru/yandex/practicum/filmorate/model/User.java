@@ -5,6 +5,7 @@ import lombok.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -12,16 +13,25 @@ import java.util.Objects;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     private Integer id;
     @Email
     private String email;
     @NotBlank
+    @Pattern(regexp = "^\\s*\\w+\\s*$")
     private String login;
     private String name;
     @Past
     private LocalDate birthday;
+
+    public User(String email, String login, String name, LocalDate birthday) {
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+    }
 
     @Override
     public int hashCode() {
