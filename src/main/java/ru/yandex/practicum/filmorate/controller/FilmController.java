@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -14,11 +13,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
+@Slf4j
 public class FilmController {
 
     private final Map<Integer, Film> films = new HashMap<>();
     private int id; //Генератор id для фильмов
-    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @GetMapping
     public List<Film> findAll() {
