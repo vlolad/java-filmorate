@@ -2,10 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -23,7 +20,7 @@ public class User {
     @Pattern(regexp = "^\\s*\\w+\\s*$")
     private String login;
     private String name;
-    @Past
+    @PastOrPresent
     private LocalDate birthday;
 
     public User(String email, String login, String name, LocalDate birthday) {
