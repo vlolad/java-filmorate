@@ -16,7 +16,7 @@ import java.util.Map;
 public class InMemoryFilmStorage implements FilmStorage {
 
     private final Map<Integer, Film> films = new HashMap<>();
-    private Integer id = 0;
+    private Integer id = 1;
 
     public List<Film> getFilms() {
         log.debug("Films amount: {}", films.size());
