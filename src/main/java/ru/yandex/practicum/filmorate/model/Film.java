@@ -5,9 +5,10 @@ import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class Film {
@@ -22,6 +23,8 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private long duration;
+    @Setter(AccessLevel.NONE)
+    private Set<Integer> likes = new HashSet<>();
 
     private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
     public Film(String name, String description, LocalDate releaseDate, long duration) {
@@ -29,6 +32,22 @@ public class Film {
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+    }
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, long duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
+
+    public void addLike(Integer id) {
+        likes.add(id);
+    }
+
+    public void removeLike(Integer id) {
+        likes.remove(id);
     }
 
     public LocalDate getMinReleaseDate() {
