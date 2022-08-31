@@ -35,7 +35,7 @@ public class UserControllerTest {
     @BeforeEach
     public void createController() {
         UserStorage storage = new InMemoryUserStorage();
-        controller = new UserController(storage, new UserService(storage));
+        controller = new UserController(new UserService(storage));
     }
 
     @Test
