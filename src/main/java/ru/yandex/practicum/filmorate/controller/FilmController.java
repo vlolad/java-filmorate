@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,26 +15,23 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
-    private final FilmStorage filmStorage;
     private final FilmService filmService;
 
     @Autowired
-    public FilmController(FilmStorage filmStorage,
-                          FilmService filmService) {
-        this.filmStorage = filmStorage;
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
 
     @GetMapping
     public List<Film> findAll() {
         log.debug("Arrived GET-request for /films");
-        return filmStorage.getFilms();
+        return filmService.getFilms();
     }
 
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable("id") Integer id) {
         log.debug("Arrived GET-request for /films/{}", id);
-        return filmStorage.getFilm(id);
+        return filmService.getFilm(id);
     }
 
     @GetMapping("/popular")
@@ -49,14 +45,14 @@ public class FilmController {
     public Film create(@Valid @RequestBody Film film) {
         log.debug("Arrived POST-request for /films");
         log.info(film.toString());
-        return filmStorage.createFilm(film);
+        return filmService.createFilm(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
         log.debug("Arrived PUT-request for /films");
         log.info(film.toString());
-        return filmStorage.updateFilm(film);
+        return filmService.updateFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")

@@ -25,6 +25,22 @@ public class FilmService {
         this.userStorage = userStorage;
     }
 
+    public List<Film> getFilms() {
+        return filmStorage.getFilms();
+    }
+
+    public Film getFilm(Integer id) {
+        return filmStorage.getFilm(id);
+    }
+
+    public Film createFilm(Film film) {
+        return filmStorage.createFilm(film);
+    }
+
+    public Film updateFilm(Film film) {
+        return filmStorage.updateFilm(film);
+    }
+
     public void addLike(Integer id, Integer userId) { //TODO добавить список лайкнутых фильмов пользователю
         User user = userStorage.getUser(userId); // Проверка, существует ли вообще такой пользователь
         Film film = filmStorage.getFilm(id);

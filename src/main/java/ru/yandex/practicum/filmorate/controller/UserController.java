@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,25 +15,23 @@ import java.util.List;
 @Slf4j
 public class UserController {
 
-    private final UserStorage userStorage;
     private final UserService userService;
 
     @Autowired
-    public UserController(UserStorage userStorage, UserService userService) {
-        this.userStorage = userStorage;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
     public List<User> findAll() {
         log.debug("Arrived GET-request at /users.");
-        return userStorage.getUsers();
+        return userService.getUsers();
     }
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable("id") Integer userId) {
         log.debug("Arrived GET-request at /users/{}", userId);
-        return userStorage.getUser(userId);
+        return userService.getUser(userId);
     }
 
     @GetMapping("/{id}/friends")
@@ -54,14 +51,14 @@ public class UserController {
     public User create(@Valid @RequestBody User user) {
         log.debug("Arrived POST-request at /users");
         log.info(user.toString());
-        return userStorage.createUser(user);
+        return userService.createUser(user);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user) {
         log.debug("Arrived PUT-request at /users");
         log.info(user.toString());
-        return userStorage.updateUser(user);
+        return userService.updateUser(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
