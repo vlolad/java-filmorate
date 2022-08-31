@@ -3,13 +3,9 @@ package ru.yandex.practicum.filmorate.storage.film;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -25,17 +21,11 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     public Film getFilm(Integer id) {
         log.debug("Searching for film with id={}", id);
-        if (films.containsKey(id)) {
-            log.debug("Success!");
-            return films.get(id);
-        } else {
-            log.warn("Film not found.");
-            throw new NotFoundException("Film with id " + id + " not found.");
-        }
+        return Optional.ofNullable(films.get(id))
+                .orElseThrow(() -> new NotFoundException("Film with id " + id + " not found."));
     }
 
     public Film createFilm(Film film) {
-        checkInput(film);
         film.setId(insertId());
         log.debug("Add new film: {}", film);
         films.put(film.getId(), film);
@@ -48,7 +38,6 @@ public class InMemoryFilmStorage implements FilmStorage {
             log.warn("Film with such id not found.");
             throw new NotFoundException("Film not found.");
         }
-        checkInput(film);
         log.debug("Put film: {}", film);
         films.put(film.getId(), film);
         return film;
@@ -56,12 +45,5 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     private Integer insertId() {
         return id++;
-    }
-
-    private void checkInput (Film film) {
-        if (film.getReleaseDate().isBefore(film.getMinReleaseDate())) {
-            log.error("Film release date is before minimal release date.");
-            throw new ValidationException("Film is unusually old.");
-        }
     }
 }

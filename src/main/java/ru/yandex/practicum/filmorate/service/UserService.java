@@ -62,18 +62,20 @@ public class UserService {
     public List<User> getFriends(Integer userId) {
         User user = userStorage.getUser(userId);
         log.debug("Searching for friends (userId={})", userId);
-        return userStorage.getUsers().stream()
-                .filter(p -> user.getFriendList().contains(p.getId()))
-                .collect(Collectors.toList());
+        return user.getFriendList().stream()
+                .map(this::getUser).collect(Collectors.toList());
     }
 
     public List<User> getCommonFriends(Integer userId, Integer otherId) {
         User user = userStorage.getUser(userId);
         User otherUser = userStorage.getUser(otherId);
         log.debug("Searching for common users friends (ids:{}/{})", userId, otherId);
-        return userStorage.getUsers().stream()
+        /*return userStorage.getUsers().stream()
                 .filter(p -> user.getFriendList().contains(p.getId())&&
                         otherUser.getFriendList().contains(p.getId()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+        return user.getFriendList().stream()
+                .filter(p -> otherUser.getFriendList().contains(p))
+                .map(this::getUser).collect(Collectors.toList());
     }
 }

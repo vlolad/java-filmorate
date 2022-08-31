@@ -3,15 +3,19 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
 @RequestMapping("/films")
+@Validated
 @Slf4j
 public class FilmController {
 
@@ -36,7 +40,7 @@ public class FilmController {
 
     @GetMapping("/popular")
     public List<Film> getPopular(
-            @RequestParam(defaultValue = "10", required = false) Integer count) {
+            @RequestParam(defaultValue = "10", required = false) @Positive Integer count) {
         log.debug("Arrived GET-request for /films/popular?count={}", count);
         return filmService.getPopular(count);
     }
@@ -44,6 +48,7 @@ public class FilmController {
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
         log.debug("Arrived POST-request for /films");
+        checkInput(film);
         log.info(film.toString());
         return filmService.createFilm(film);
     }
@@ -51,6 +56,7 @@ public class FilmController {
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
         log.debug("Arrived PUT-request for /films");
+        checkInput(film);
         log.info(film.toString());
         return filmService.updateFilm(film);
     }
@@ -69,5 +75,12 @@ public class FilmController {
                            @PathVariable("userId") Integer userId) {
         log.debug("Arrived DELETE-request for /films/{}/like/{}", filmId, userId);
         filmService.deleteLike(filmId, userId);
+    }
+
+    private void checkInput (Film film) {
+        if (film.getReleaseDate().isBefore(film.getMinReleaseDate())) {
+            log.error("Film release date is before minimal release date.");
+            throw new ValidationException("Film is unusually old.");
+        }
     }
 }

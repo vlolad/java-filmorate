@@ -50,6 +50,7 @@ public class UserController {
     @PostMapping
     public User create(@Valid @RequestBody User user) {
         log.debug("Arrived POST-request at /users");
+        checkName(user);
         log.info(user.toString());
         return userService.createUser(user);
     }
@@ -57,6 +58,7 @@ public class UserController {
     @PutMapping
     public User update(@Valid @RequestBody User user) {
         log.debug("Arrived PUT-request at /users");
+        checkName(user);
         log.info(user.toString());
         return userService.updateUser(user);
     }
@@ -75,5 +77,12 @@ public class UserController {
                              @PathVariable("friendId") Integer friendId) {
         log.debug("Arrived DELETE-request at /users/{}/friends/{}", userId, friendId);
         userService.deleteFriend(userId, friendId);
+    }
+
+    private void checkName(User user) {
+        user.setLogin(user.getLogin().trim()); // Убирает лишние пробелы перед и после логина, на валидацию не влияет
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 }

@@ -20,17 +20,13 @@ public class InMemoryUserStorage implements UserStorage {
 
     public User getUser(Integer userId) {
         log.debug("Searching for user with id={}", userId);
-        if (users.containsKey(userId)) {
-            log.debug("Success!");
-            return users.get(userId);
-        } else {
-            log.warn("User not found.");
-            throw new NotFoundException("User with id " + userId + " not found.");
-        }
+        User user = Optional.ofNullable(users.get(userId))
+                .orElseThrow(() -> new NotFoundException("User with id " + userId + " not found."));
+        log.debug("Success");
+        return user;
     }
 
     public User createUser(User user) {
-        checkName(user);
         user.setId(insertId());
         log.debug("Create new user: {}", user);
         users.put(user.getId(), user);
@@ -43,7 +39,6 @@ public class InMemoryUserStorage implements UserStorage {
             log.warn("User with such id not found.");
             throw new NotFoundException("User not found.");
         }
-        checkName(user);
         log.info("Update user: {}", user);
         users.put(user.getId(), user);
         log.debug("User with id={} updated successfully", user.getId());
@@ -52,12 +47,5 @@ public class InMemoryUserStorage implements UserStorage {
 
     private int insertId() {
         return id++;
-    }
-
-    private void checkName(User user) {
-        user.setLogin(user.getLogin().trim()); // Убирает лишние пробелы перед и после логина, на валидацию не влияет
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
     }
 }
