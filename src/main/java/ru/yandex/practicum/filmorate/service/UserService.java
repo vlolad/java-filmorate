@@ -43,8 +43,6 @@ public class UserService {
         User friend = userStorage.getUser(friendId);
         user.addFriend(friendId);
         friend.addFriend(userId);
-        userStorage.updateUser(user);
-        userStorage.updateUser(friend);
         log.debug("Friends ({}/{}) updated.", friendId, userId);
     }
 
@@ -54,8 +52,6 @@ public class UserService {
         User friend = userStorage.getUser(friendId);
         user.deleteFriend(friendId);
         friend.deleteFriend(userId);
-        userStorage.updateUser(user);
-        userStorage.updateUser(friend);
         log.debug("Users(id:{}/{}) are no longer friends.", friendId, userId);
     }
 
@@ -70,10 +66,6 @@ public class UserService {
         User user = userStorage.getUser(userId);
         User otherUser = userStorage.getUser(otherId);
         log.debug("Searching for common users friends (ids:{}/{})", userId, otherId);
-        /*return userStorage.getUsers().stream()
-                .filter(p -> user.getFriendList().contains(p.getId())&&
-                        otherUser.getFriendList().contains(p.getId()))
-                .collect(Collectors.toList());*/
         return user.getFriendList().stream()
                 .filter(p -> otherUser.getFriendList().contains(p))
                 .map(this::getUser).collect(Collectors.toList());

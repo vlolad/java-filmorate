@@ -46,7 +46,6 @@ public class FilmService {
         Film film = filmStorage.getFilm(id);
         log.debug("Add like (id={}) to film id={}", userId, id);
         film.addLike(userId);
-        filmStorage.updateFilm(film);
     }
 
     public void deleteLike(Integer id, Integer userId) {
@@ -55,7 +54,6 @@ public class FilmService {
         if (film.getLikes().contains(userId)) {
             log.debug("Remove like (id={}) from film id={}", userId, id);
             film.removeLike(userId);
-            filmStorage.updateFilm(film);
         } else {
             log.warn("Like (id={}) not found", userId);
             throw new NotFoundException("Like not found");
