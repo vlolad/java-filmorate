@@ -23,27 +23,27 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleValidationException(final ValidationException e) {
-        log.error("Validation error");
+        log.error("Validation error: {}", e.getMessage());
         return e.getMessage();
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFoundException(final NotFoundException e) {
-        log.warn("Not found exception");
+        log.warn("Not found exception: {}", e.getMessage());
         return e.getMessage();
     }
 
     @ExceptionHandler
     public ResponseEntity<String> handleConstraintViolationException(final ConstraintViolationException e) {
-        log.warn("Constraint Violation Exception");
+        log.warn("Constraint Violation Exception: {}", e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleRuntimeExceptions(final Throwable e) {
-        log.error("Unusual exception: " + e.getMessage());
+        log.error("Unusual exception: {}", e.getMessage());
         return "Unexpected error: " + e.getMessage();
     }
 }
