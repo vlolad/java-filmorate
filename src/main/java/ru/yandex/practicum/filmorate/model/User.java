@@ -4,12 +4,13 @@ import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 public class User {
 
@@ -22,12 +23,30 @@ public class User {
     private String name;
     @PastOrPresent
     private LocalDate birthday;
+    @Setter(AccessLevel.NONE)
+    private Set<Integer> friendList = new HashSet<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
         this.login = login;
         this.name = name;
         this.birthday = birthday;
+    }
+
+    public User(Integer id, String email, String login, String name, LocalDate birthday) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+    }
+
+    public void addFriend(Integer friendId) {
+        friendList.add(friendId);
+    }
+
+    public void deleteFriend(Integer friendId) {
+        friendList.remove(friendId);
     }
 
     @Override

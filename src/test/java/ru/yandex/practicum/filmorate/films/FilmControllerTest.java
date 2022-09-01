@@ -5,6 +5,11 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -31,7 +36,9 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void createController(){
-        controller = new FilmController();
+        FilmStorage storage = new InMemoryFilmStorage();
+        UserStorage userStorage = new InMemoryUserStorage();
+        controller = new FilmController(new FilmService(storage, userStorage));
     }
 
     @Test
