@@ -67,7 +67,7 @@ public class UserService {
         User otherUser = userStorage.getUser(otherId);
         log.debug("Searching for common users friends (ids:{}/{})", userId, otherId);
         return user.getFriendList().stream()
-                .filter(p -> otherUser.getFriendList().contains(p))
+                .filter(otherUser.getFriendList()::contains)
                 .map(this::getUser).collect(Collectors.toList());
     }
 }
