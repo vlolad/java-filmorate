@@ -25,6 +25,8 @@ public class Film {
     private long duration;
     @Setter(AccessLevel.NONE)
     private Set<Integer> likes = new HashSet<>();
+    private String[] genre;
+    private Rating rating;
 
     private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
     public Film(String name, String description, LocalDate releaseDate, long duration) {

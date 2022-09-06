@@ -41,8 +41,8 @@ public class UserService {
         log.debug("Add friend (id={}) to user (id={})", friendId, userId);
         User user = userStorage.getUser(userId);
         User friend = userStorage.getUser(friendId);
-        user.addFriend(friendId);
-        friend.addFriend(userId);
+        user.addFriend(friendId, true);
+        friend.addFriend(userId, false);
         log.debug("Friends ({}/{}) updated.", friendId, userId);
     }
 

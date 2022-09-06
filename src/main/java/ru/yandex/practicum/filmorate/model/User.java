@@ -4,9 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -24,7 +22,7 @@ public class User {
     @PastOrPresent
     private LocalDate birthday;
     @Setter(AccessLevel.NONE)
-    private Set<Integer> friendList = new HashSet<>();
+    private Map<Integer, Boolean> friendList = new HashMap<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
@@ -41,12 +39,21 @@ public class User {
         this.birthday = birthday;
     }
 
-    public void addFriend(Integer friendId) {
-        friendList.add(friendId);
+    public void addFriend(Integer friendId, Boolean acceptance) {
+        friendList.put(friendId, acceptance);
     }
 
     public void deleteFriend(Integer friendId) {
         friendList.remove(friendId);
+    }
+
+    //TODO на момент тестов ТЗ-11 оставил вывод всех друзей, надо вывод только подтвержденных
+    public void acceptFriend(Integer friendId) {
+        friendList.replace(friendId, true);
+    }
+
+    public Set<Integer> getFriendList() {
+        return friendList.keySet();
     }
 
     @Override
