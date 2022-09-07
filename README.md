@@ -2,7 +2,7 @@
 Template repository for Filmorate project.
 
 ХРАНЕНИЕ ДАННЫХ:
-![vlolad's filmorate database](https://sun9-24.userapi.com/impg/CaMYF95eCtxg9nEC5FkzCzUKahA8nlijED5KtQ/N_ty6VUwExM.jpg?size=906x795&quality=96&sign=f253d15dc367de931bd5e7b4893f8b63&type=album)
+![vlolad's filmorate database](https://sun9-62.userapi.com/impg/5AQxJvb7TDnh3xKST26i215LYJxbFM04p8YpIg/D5RcO4zYpoI.jpg?size=906x795&quality=96&sign=87f54dc4af5ffd5ff9f2d2d6b991c239&type=album)
 
 Хранение основных сущностей: таблицы **films** и **users**
 Таблица **films** связана с табилцей **ratings**, в которой содержится закрытый перечень возможных рейтингов
