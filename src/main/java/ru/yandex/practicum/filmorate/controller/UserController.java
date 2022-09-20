@@ -84,5 +84,6 @@ public class UserController {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
+        log.info("Check name complete.");
     }
 }

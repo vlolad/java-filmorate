@@ -21,8 +21,6 @@ public class User {
     private String name;
     @PastOrPresent
     private LocalDate birthday;
-    @Setter(AccessLevel.NONE)
-    private Map<Integer, Boolean> friendList = new HashMap<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
@@ -39,23 +37,6 @@ public class User {
         this.birthday = birthday;
     }
 
-    public void addFriend(Integer friendId, Boolean acceptance) {
-        friendList.put(friendId, acceptance);
-    }
-
-    public void deleteFriend(Integer friendId) {
-        friendList.remove(friendId);
-    }
-
-    //TODO на момент тестов ТЗ-11 оставил вывод всех друзей, надо вывод только подтвержденных
-    public void acceptFriend(Integer friendId) {
-        friendList.replace(friendId, true);
-    }
-
-    public Set<Integer> getFriendList() {
-        return friendList.keySet();
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(email);
@@ -68,5 +49,14 @@ public class User {
         if (this.getClass() != obj.getClass()) return false;
         User otherUser = (User) obj;
         return Objects.equals(email, otherUser.email);
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("email", email);
+        values.put("login", login);
+        values.put("name", name);
+        values.put("birthday", birthday);
+        return values;
     }
 }
