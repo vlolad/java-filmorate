@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -42,34 +42,30 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public void addLike(Integer id, Integer userId) {
-        User user = userStorage.getUser(userId); // Проверка, существует ли вообще такой пользователь
-        Film film = filmStorage.getFilm(id);
-        log.debug("Add like (id={}) to film id={}", userId, id);
-        //film.addLike(userId);
+    public void addLike(Integer filmId, Integer userId) {
+        try {
+            User user = userStorage.getUser(userId); // Проверка
+            Film film = filmStorage.getFilm(filmId);
+        } catch (NotFoundException e) {
+            log.warn("Catch NotFoundException.");
+            throw e;
+        }
+        log.debug("User (id={}) and film (id={}) exists.", userId, filmId);
+        filmStorage.addLike(filmId, userId);
     }
 
-    public void deleteLike(Integer id, Integer userId) {
-        User user = userStorage.getUser(userId);
-        Film film = filmStorage.getFilm(id);
-       /* if (film.getLikes().contains(userId)) {
-            log.debug("Remove like (id={}) from film id={}", userId, id);
-            film.removeLike(userId);
-        } else {
-            log.warn("Like (id={}) not found", userId);
-            throw new NotFoundException("Like not found");
-        } */
+    public void deleteLike(Integer filmId, Integer userId) {
+        try {
+            User user = userStorage.getUser(userId); // Проверка
+            Film film = filmStorage.getFilm(filmId);
+        } catch (NotFoundException e) {
+            log.warn("Catch NotFoundException.");
+            throw e;
+        }
+        log.debug("User (id={}) and film (id={}) exists.", userId, filmId);
     }
 
     public List<Film> getPopular(Integer count) {
-        return filmStorage.getFilms().stream()
-                .sorted(this::compareForLikes)
-                .limit(count)
-                .collect(Collectors.toList());
-    }
-
-    private int compareForLikes(Film p1, Film p2) {
-        log.debug("p1 size={}, p2 size={}", p1.getRate(), p2.getRate());
-        return p2.getRate() - p1.getRate();
+        return filmStorage.getPopular(count);
     }
 }

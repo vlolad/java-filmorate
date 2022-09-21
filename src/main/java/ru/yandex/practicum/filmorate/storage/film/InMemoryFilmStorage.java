@@ -43,6 +43,22 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
+    @Override
+    public List<Film> getPopular(Integer count) {
+        log.warn("Functionality not functional.");
+        return null;
+    }
+
+    @Override
+    public void addLike(Integer filmId, Integer userId) {
+        log.warn("Functionality not functional.");
+    }
+
+    @Override
+    public void deleteLike(Integer filmId, Integer userId) {
+        log.warn("Functionality not functional.");
+    }
+
     private Integer insertId() {
         return id++;
     }

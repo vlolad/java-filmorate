@@ -79,7 +79,7 @@ public class FilmController {
         filmService.deleteLike(filmId, userId);
     }
 
-    private void checkInput (Film film) {
+    private void checkInput(Film film) {
         if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
             log.error("Film release date is before minimal release date.");
             throw new ValidationException("Film is unusually old.");
