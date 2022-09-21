@@ -74,6 +74,7 @@ public class FilmDbStorage implements FilmStorage {
                     film.getId());
             genresDao.updateFilmGenres(film.getGenres(), film.getId());
             log.info("Film (id={} | name={}) updated successfully.", film.getId(), film.getName());
+            film.setGenres(genresDao.getFilmGenres(film.getId()));
             return film;
         } else {
             log.warn("Film (id={}) not found.", film.getId());
