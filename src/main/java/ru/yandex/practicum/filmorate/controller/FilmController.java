@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,6 +21,7 @@ import java.util.List;
 public class FilmController {
 
     private final FilmService filmService;
+    private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
 
     @Autowired
     public FilmController(FilmService filmService) {
@@ -78,7 +80,7 @@ public class FilmController {
     }
 
     private void checkInput (Film film) {
-        if (film.getReleaseDate().isBefore(film.getMinReleaseDate())) {
+        if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
             log.error("Film release date is before minimal release date.");
             throw new ValidationException("Film is unusually old.");
         }

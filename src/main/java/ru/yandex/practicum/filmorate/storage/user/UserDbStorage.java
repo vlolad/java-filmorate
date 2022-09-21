@@ -30,16 +30,16 @@ public class UserDbStorage implements UserStorage {
     }
 
     public User getUser(Integer userId) {
-        SqlRowSet userRs = jdbc.queryForRowSet("select * from users where id = ?", userId);
-        if (userRs.next()) {
+        SqlRowSet rs = jdbc.queryForRowSet("select * from users where id = ?", userId);
+        if (rs.next()) {
             User user = new User(
-                    userRs.getInt("id"),
-                    userRs.getString("email"),
-                    userRs.getString("login"),
-                    userRs.getString("name"),
-                    Objects.requireNonNull(userRs.getDate("birthday")).toLocalDate()
+                    rs.getInt("id"),
+                    rs.getString("email"),
+                    rs.getString("login"),
+                    rs.getString("name"),
+                    Objects.requireNonNull(rs.getDate("birthday")).toLocalDate()
             );
-            log.info("Found user: " + user);
+            log.info("User found.");
             return user;
         } else {
             log.warn("User id={} not found.", userId);
@@ -54,20 +54,19 @@ public class UserDbStorage implements UserStorage {
                 .usingGeneratedKeyColumns("id");
 
         Integer newUserId = simpleJdbcInsert.executeAndReturnKey(user.toMap()).intValue();
-        log.info("User (id={} | login={}) create successfully.", newUserId, user.getLogin());
+        log.info("User (id={} | login={}) created successfully.", newUserId, user.getLogin());
         user.setId(newUserId);
         return user;
     }
 
     public User updateUser(User user) {
-        SqlRowSet checkUser = jdbc.queryForRowSet("select * from users where id = ?", user.getId());
-        if (user.getId() != null && checkUser.next()) {
+        if (user.getId() != null && checkUser(user.getId())) {
             log.info("User successfully found. Trying to update.");
-            String sqlQuery = "update users set " +
+            String sql = "update users set " +
                     "email = ?, login = ?, name = ?, birthday = ? " +
                     "where id = ?";
 
-            jdbc.update(sqlQuery,
+            jdbc.update(sql,
                     user.getEmail(),
                     user.getLogin(),
                     user.getName(),

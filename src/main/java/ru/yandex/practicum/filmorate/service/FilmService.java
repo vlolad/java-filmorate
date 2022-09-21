@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -20,7 +20,8 @@ public class FilmService {
     private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(@Qualifier("FilmDbStorage") FilmStorage filmStorage,
+                       @Qualifier("UserDbStorage") UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
@@ -41,23 +42,23 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public void addLike(Integer id, Integer userId) { //TODO добавить список лайкнутых фильмов пользователю
+    public void addLike(Integer id, Integer userId) {
         User user = userStorage.getUser(userId); // Проверка, существует ли вообще такой пользователь
         Film film = filmStorage.getFilm(id);
         log.debug("Add like (id={}) to film id={}", userId, id);
-        film.addLike(userId);
+        //film.addLike(userId);
     }
 
     public void deleteLike(Integer id, Integer userId) {
         User user = userStorage.getUser(userId);
         Film film = filmStorage.getFilm(id);
-        if (film.getLikes().contains(userId)) {
+       /* if (film.getLikes().contains(userId)) {
             log.debug("Remove like (id={}) from film id={}", userId, id);
             film.removeLike(userId);
         } else {
             log.warn("Like (id={}) not found", userId);
             throw new NotFoundException("Like not found");
-        }
+        } */
     }
 
     public List<Film> getPopular(Integer count) {
@@ -68,7 +69,7 @@ public class FilmService {
     }
 
     private int compareForLikes(Film p1, Film p2) {
-        log.debug("p1 size={}, p2 size={}", p1.getLikes().size(), p2.getLikes().size());
-        return p2.getLikes().size() - p1.getLikes().size();
+        log.debug("p1 size={}, p2 size={}", p1.getRate(), p2.getRate());
+        return p2.getRate() - p1.getRate();
     }
 }
