@@ -1,16 +1,10 @@
-drop table FILMS_GENRES;
-
-drop table FILMS_LIKES;
-
-drop table FILMS;
-
-drop table FRIENDS_LIST;
-
-drop table GENRES;
-
-drop table RATINGS;
-
-drop table USERS;
+drop table if exists FILMS_GENRES;
+drop table if exists FILMS_LIKES;
+drop table if exists FILMS;
+drop table if exists FRIENDS_LIST;
+drop table if exists GENRES;
+drop table if exists RATINGS;
+drop table if exists USERS;
 
 CREATE TABLE IF NOT EXISTS ratings
 (

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.films;
+package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
