@@ -75,6 +75,7 @@ public class FilmDbStorage implements FilmStorage {
             genresDao.updateFilmGenres(film.getGenres(), film.getId());
             log.info("Film (id={} | name={}) updated successfully.", film.getId(), film.getName());
             film.setGenres(genresDao.getFilmGenres(film.getId()));
+            film.setRate(getRating(film.getId()));
             return film;
         } else {
             log.warn("Film (id={}) not found.", film.getId());
@@ -106,5 +107,10 @@ public class FilmDbStorage implements FilmStorage {
 
     private boolean checkFilm(Integer id) {
         return jdbc.queryForRowSet("select * from films where id = ?", id).next();
+    }
+
+    private Integer getRating(Integer id) {
+        String sql = "SELECT COUNT(LIKE_USER_ID) FROM FILMS_LIKES WHERE FILM_ID = ?";
+        return jdbc.queryForObject(sql, Integer.class, id);
     }
 }

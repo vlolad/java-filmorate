@@ -25,7 +25,8 @@ public class Film {
     @Positive
     private long duration;
 
-    private Integer rate;
+    private Integer rate = 0; //Аннотация @NotNull была бы лучше, но с ней не проходятся тесты в postman
+    //Поле обновляется при создании и обновлении фильма исходя из данных в таблице film_likes
     private MPA mpa;
     private List<Genre> genres;
 
@@ -51,6 +52,15 @@ public class Film {
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+    }
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, long duration, MPA mpa) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
     }
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, long duration, Integer rate, MPA mpa) {
