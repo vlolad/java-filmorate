@@ -22,10 +22,8 @@ public class FriendsDaoImpl implements FriendsDao {
     public List<User> getFriendsByUserId(Integer userId) {
         if (checkUser(userId)) {
             log.info("User successfully found. Searching for friends.");
-            String sqlQuery = "Select * from USERS " +
-                    "join FRIENDS_LIST as fl on USERS.ID = fl.FRIEND_ID " +
-                    "where fl.USER_ID = ? " +
-                    "order by id";
+            String sqlQuery = "select * from USERS, FRIENDS_LIST " +
+                    "where USERS.ID = FRIENDS_LIST.FRIEND_ID AND FRIENDS_LIST.USER_ID = ?";
             return jdbc.query(sqlQuery, (rs, rowNum) -> createUser(rs), userId);
         } else {
             log.warn("User with such id (id={}) not found.", userId);
