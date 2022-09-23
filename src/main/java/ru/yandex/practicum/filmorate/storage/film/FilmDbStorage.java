@@ -82,7 +82,6 @@ public class FilmDbStorage implements FilmStorage {
             throw new NotFoundException("Film with ID + " + film.getId() + " not found.");
         }
     }
-
     public List<Film> getPopular(Integer limit) {
         String sqlQuery = "SELECT F.*, COUNT(FL.LIKE_USER_ID) AS SES " +
                 "FROM FILMS AS F LEFT JOIN FILMS_LIKES FL on F.ID = FL.FILM_ID " +
@@ -91,18 +90,6 @@ public class FilmDbStorage implements FilmStorage {
                 "LIMIT ?";
         log.info("Searching for {} most popular films.", limit);
         return jdbc.query(sqlQuery, filmMapper, limit);
-    }
-
-    public void addLike(Integer filmId, Integer userId) {
-        String sql = "MERGE INTO FILMS_LIKES KEY (FILM_ID, LIKE_USER_ID) VALUES (?, ?)";
-        log.info("Add like (id={}) to film id={}", userId, filmId);
-        jdbc.update(sql, filmId, userId);
-    }
-
-    public void deleteLike(Integer filmId, Integer userId) {
-        String sql = "DELETE FROM FILMS_LIKES WHERE FILM_ID = ? AND LIKE_USER_ID = ?";
-        log.info("Remove like (id={}) from film id={}", userId, filmId);
-        jdbc.update(sql, filmId, userId);
     }
 
     private boolean checkFilm(Integer id) {

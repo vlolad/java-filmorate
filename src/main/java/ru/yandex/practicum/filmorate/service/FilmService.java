@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.LikesDao;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -18,12 +19,15 @@ public class FilmService {
 
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
+    private final LikesDao likesDao;
 
     @Autowired
     public FilmService(@Qualifier("FilmDbStorage") FilmStorage filmStorage,
-                       @Qualifier("UserDbStorage") UserStorage userStorage) {
+                       @Qualifier("UserDbStorage") UserStorage userStorage,
+                       LikesDao likesDao) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.likesDao = likesDao;
     }
 
     public List<Film> getFilms() {
@@ -51,7 +55,7 @@ public class FilmService {
             throw e;
         }
         log.debug("User (id={}) and film (id={}) exists.", userId, filmId);
-        filmStorage.addLike(filmId, userId);
+        likesDao.addLike(filmId, userId);
     }
 
     public void deleteLike(Integer filmId, Integer userId) {
@@ -63,6 +67,7 @@ public class FilmService {
             throw e;
         }
         log.debug("User (id={}) and film (id={}) exists.", userId, filmId);
+        likesDao.deleteLike(filmId, userId);
     }
 
     public List<Film> getPopular(Integer count) {
