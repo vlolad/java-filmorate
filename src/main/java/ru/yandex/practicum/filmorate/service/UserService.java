@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendsDao;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
@@ -14,10 +15,12 @@ import java.util.List;
 public class UserService {
 
     private final UserStorage userStorage;
+    private final FriendsDao friendsDao;
 
     @Autowired
-        public UserService(@Qualifier("UserDbStorage") UserStorage userStorage) {
+        public UserService(@Qualifier("UserDbStorage") UserStorage userStorage, FriendsDao friendsDao) {
         this.userStorage = userStorage;
+        this.friendsDao = friendsDao;
     }
 
     public List<User> getUsers() {
@@ -38,22 +41,22 @@ public class UserService {
 
     public List<User> getFriends(Integer userId) {
         log.debug("Searching for friends (userId={})", userId);
-        return userStorage.getFriendsByUserId(userId);
+        return friendsDao.getFriendsByUserId(userId);
     }
     public void addFriend(Integer userId, Integer friendId) {
         log.debug("Add friend (id={}) to user (id={})", friendId, userId);
-        userStorage.addFriend(userId, friendId);
+        friendsDao.addFriend(userId, friendId);
         log.debug("Friends ({}/{}) updated.", friendId, userId);
     }
 
     public void deleteFriend(Integer userId, Integer friendId) {
         log.debug("Delete friend (id={}) from user (id={})", friendId, userId);
-        userStorage.deleteFriend(userId, friendId);
+        friendsDao.deleteFriend(userId, friendId);
         log.debug("Users(id:{}/{}) are no longer friends.", friendId, userId);
     }
 
     public List<User> getCommonFriends(Integer userId, Integer otherId) {
                 log.debug("Searching for common users friends (ids:{}/{})", userId, otherId);
-        return userStorage.getCommonFriends(userId, otherId);
+        return friendsDao.getCommonFriends(userId, otherId);
     }
 }
