@@ -5,8 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.GenresDao;
-import ru.yandex.practicum.filmorate.storage.RatingsDao;
+import ru.yandex.practicum.filmorate.model.MPA;
 
 
 import java.sql.ResultSet;
@@ -16,14 +15,10 @@ import java.sql.SQLException;
 public class FilmMapper implements RowMapper<Film> {
 
     private final JdbcTemplate jdbc;
-    private final GenresDao genresDao;
-    private final RatingsDao mpaDao;
 
     @Autowired
-    public FilmMapper(JdbcTemplate jdbc, GenresDao genresDao, RatingsDao mpaDao) {
+    public FilmMapper(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
-        this.genresDao = genresDao;
-        this.mpaDao = mpaDao;
     }
 
     @Override
@@ -36,10 +31,9 @@ public class FilmMapper implements RowMapper<Film> {
                 rs.getInt("duration")
         );
         if (rs.getInt("rating_id") > 0) {
-            film.setMpa(mpaDao.getMpaById(rs.getInt("rating_id")));
+            film.setMpa(new MPA(rs.getInt("ratings.id"), rs.getString("ratings.name")));
         }
         film.setRate(getRating(film.getId()));
-        film.setGenres(genresDao.getFilmGenres(film.getId()));
         return film;
     }
 

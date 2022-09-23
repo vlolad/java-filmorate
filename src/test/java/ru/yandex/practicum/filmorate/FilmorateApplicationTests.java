@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.*;
+import ru.yandex.practicum.filmorate.storage.FriendsDao;
+import ru.yandex.practicum.filmorate.storage.LikesDao;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.impl.GenresDaoImpl;
 import ru.yandex.practicum.filmorate.storage.impl.RatingsDaoImpl;
@@ -27,6 +29,9 @@ class FilmorateApplicationTests {
     private final FilmDbStorage filmStorage;
     private final GenresDaoImpl genreStorage;
     private final RatingsDaoImpl ratingsStorage;
+
+    private final LikesDao likesDao;
+    private final FriendsDao friendsDao;
 
     @Test
     @Order(1)
@@ -84,9 +89,9 @@ class FilmorateApplicationTests {
     @Test
     @Order(5)
     public void testAddFriends() {
-        userStorage.addFriend(1, 2);
-        userStorage.addFriend(1, 3);
-        List<User> userOneFriends = userStorage.getFriendsByUserId(1);
+        friendsDao.addFriend(1, 2);
+        friendsDao.addFriend(1, 3);
+        List<User> userOneFriends = friendsDao.getFriendsByUserId(1);
         assertEquals(2, userOneFriends.size(),
                 "Wrong amount of friends: expected=2, got=" + userOneFriends.size());
     }
@@ -94,8 +99,8 @@ class FilmorateApplicationTests {
     @Test
     @Order(6)
     public void testCommonFriends() {
-        userStorage.addFriend(2, 3);
-        List<User> commonFriends = userStorage.getCommonFriends(1, 2);
+        friendsDao.addFriend(2, 3);
+        List<User> commonFriends = friendsDao.getCommonFriends(1, 2);
         assertEquals(1, commonFriends.size(),
                 "Wrong amount of common friends: expected=1, got=" + commonFriends.size());
         assertEquals(3, commonFriends.get(0).getId(),
@@ -105,8 +110,8 @@ class FilmorateApplicationTests {
     @Test
     @Order(7)
     public void testDeleteFriend() {
-        userStorage.deleteFriend(1, 3);
-        List<User> commonFriends = userStorage.getCommonFriends(1, 2);
+        friendsDao.deleteFriend(1, 3);
+        List<User> commonFriends = friendsDao.getCommonFriends(1, 2);
         assertEquals(0, commonFriends.size(),
                 "Wrong amount of common friends: expected=0, got=" + commonFriends.size());
     }
@@ -197,16 +202,15 @@ class FilmorateApplicationTests {
     @Test
     @Order(13)
     public void testAddLikes() {
-        filmStorage.addLike(2, 1);
-        filmStorage.addLike(2, 2);
-        filmStorage.addLike(2, 3);
-        filmStorage.addLike(1, 1);
-        filmStorage.addLike(1, 3);
+        likesDao.addLike(2, 1);
+        likesDao.addLike(2, 2);
+        likesDao.addLike(2, 3);
+        likesDao.addLike(1, 1);
+        likesDao.addLike(1, 3);
         Integer film1Rate = filmStorage.getFilm(1).getRate();
         assertEquals(2, film1Rate);
         Integer film2Rate = filmStorage.getFilm(2).getRate();
         assertEquals(3, film2Rate);
-
     }
 
     @Test
@@ -220,8 +224,8 @@ class FilmorateApplicationTests {
     @Test
     @Order(15)
     public void testDeleteLike() {
-        filmStorage.deleteLike(2, 1);
-        filmStorage.deleteLike(2, 3);
+        likesDao.deleteLike(2, 1);
+        likesDao.deleteLike(2, 3);
         List<Film> popularFilms = filmStorage.getPopular(2);
         assertEquals(1, popularFilms.get(0).getId());
     }
