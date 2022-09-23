@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
 
-@Component("InMemoryFilmStorage")
+
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
 
