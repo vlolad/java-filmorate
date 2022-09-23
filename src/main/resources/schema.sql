@@ -32,8 +32,10 @@ CREATE TABLE IF NOT EXISTS genres
 
 CREATE TABLE IF NOT EXISTS films_genres
 (
+
     genre_id varchar references genres (id),
-    film_id  integer references films (id)
+    film_id  integer references films (id),
+    constraint pk_compl_films_genres PRIMARY KEY (film_id, genre_id)
 );
 
 CREATE TABLE IF NOT EXISTS users
@@ -50,11 +52,13 @@ create unique index if not exists user_id_index on users (id);
 CREATE TABLE IF NOT EXISTS films_likes
 (
     film_id      integer references films (id),
-    like_user_id integer references users (id)
+    like_user_id integer references users (id),
+    constraint pk_compl_films_likes PRIMARY KEY (film_id, like_user_id)
 );
 
 CREATE TABLE IF NOT EXISTS friends_list
 (
     user_id   integer references users (id),
-    friend_id integer references users (id)
+    friend_id integer references users (id),
+    constraint pk_compl_friends_list PRIMARY KEY (user_id, friend_id)
 );
