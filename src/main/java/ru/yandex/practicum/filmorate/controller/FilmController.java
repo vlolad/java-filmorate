@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,20 +11,18 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/films")
 @Validated
 @Slf4j
+@RequiredArgsConstructor
 public class FilmController {
 
     private final FilmService filmService;
-
-    @Autowired
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
-    }
+    private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
 
     @GetMapping
     public List<Film> findAll() {
@@ -77,8 +75,8 @@ public class FilmController {
         filmService.deleteLike(filmId, userId);
     }
 
-    private void checkInput (Film film) {
-        if (film.getReleaseDate().isBefore(film.getMinReleaseDate())) {
+    private void checkInput(Film film) {
+        if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
             log.error("Film release date is before minimal release date.");
             throw new ValidationException("Film is unusually old.");
         }

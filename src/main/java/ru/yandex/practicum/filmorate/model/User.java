@@ -4,9 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -23,8 +21,6 @@ public class User {
     private String name;
     @PastOrPresent
     private LocalDate birthday;
-    @Setter(AccessLevel.NONE)
-    private Set<Integer> friendList = new HashSet<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
@@ -41,14 +37,6 @@ public class User {
         this.birthday = birthday;
     }
 
-    public void addFriend(Integer friendId) {
-        friendList.add(friendId);
-    }
-
-    public void deleteFriend(Integer friendId) {
-        friendList.remove(friendId);
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(email);
@@ -61,5 +49,14 @@ public class User {
         if (this.getClass() != obj.getClass()) return false;
         User otherUser = (User) obj;
         return Objects.equals(email, otherUser.email);
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("email", email);
+        values.put("login", login);
+        values.put("name", name);
+        values.put("birthday", birthday);
+        return values;
     }
 }

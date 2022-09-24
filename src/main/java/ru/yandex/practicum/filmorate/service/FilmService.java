@@ -2,15 +2,15 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.LikesDao;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -18,11 +18,15 @@ public class FilmService {
 
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
+    private final LikesDao likesDao;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(@Qualifier("FilmDbStorage") FilmStorage filmStorage,
+                       @Qualifier("UserDbStorage") UserStorage userStorage,
+                       LikesDao likesDao) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.likesDao = likesDao;
     }
 
     public List<Film> getFilms() {
@@ -41,34 +45,21 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public void addLike(Integer id, Integer userId) { //TODO добавить список лайкнутых фильмов пользователю
-        User user = userStorage.getUser(userId); // Проверка, существует ли вообще такой пользователь
-        Film film = filmStorage.getFilm(id);
-        log.debug("Add like (id={}) to film id={}", userId, id);
-        film.addLike(userId);
+    public void addLike(Integer filmId, Integer userId) {
+        User user = userStorage.getUser(userId); // Проверка
+        Film film = filmStorage.getFilm(filmId);
+        log.debug("User (id={}) and film (id={}) exists.", userId, filmId);
+        likesDao.addLike(filmId, userId);
     }
 
-    public void deleteLike(Integer id, Integer userId) {
-        User user = userStorage.getUser(userId);
-        Film film = filmStorage.getFilm(id);
-        if (film.getLikes().contains(userId)) {
-            log.debug("Remove like (id={}) from film id={}", userId, id);
-            film.removeLike(userId);
-        } else {
-            log.warn("Like (id={}) not found", userId);
-            throw new NotFoundException("Like not found");
-        }
+    public void deleteLike(Integer filmId, Integer userId) {
+        User user = userStorage.getUser(userId); // Проверка
+        Film film = filmStorage.getFilm(filmId);
+        log.debug("User (id={}) and film (id={}) exists.", userId, filmId);
+        likesDao.deleteLike(filmId, userId);
     }
 
     public List<Film> getPopular(Integer count) {
-        return filmStorage.getFilms().stream()
-                .sorted(this::compareForLikes)
-                .limit(count)
-                .collect(Collectors.toList());
-    }
-
-    private int compareForLikes(Film p1, Film p2) {
-        log.debug("p1 size={}, p2 size={}", p1.getLikes().size(), p2.getLikes().size());
-        return p2.getLikes().size() - p1.getLikes().size();
+        return filmStorage.getPopular(count);
     }
 }

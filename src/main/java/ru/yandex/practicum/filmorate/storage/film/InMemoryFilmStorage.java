@@ -1,13 +1,12 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
 
-@Component
+
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
 
@@ -41,6 +40,12 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.debug("Put film: {}", film);
         films.put(film.getId(), film);
         return film;
+    }
+
+    @Override
+    public List<Film> getPopular(Integer count) {
+        log.warn("Functionality not functional.");
+        return null;
     }
 
     private Integer insertId() {

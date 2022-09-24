@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
 
-@Component
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
 
@@ -45,6 +44,23 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
+    public List<User> getFriendsByUserId(Integer userId) {
+        System.out.println("No functionality included...");
+        return null;
+    }
+
+    public void addFriend(Integer userId, Integer friendId) {
+        System.out.println("No functionality included...");
+    }
+
+    public void deleteFriend(Integer userId, Integer friendId) {
+        System.out.println("No functionality included...");
+    }
+
+    public List<User> getCommonFriends(Integer userId, Integer otherId) {
+        System.out.println("No functionality included...");
+        return null;
+    }
     private int insertId() {
         return id++;
     }
