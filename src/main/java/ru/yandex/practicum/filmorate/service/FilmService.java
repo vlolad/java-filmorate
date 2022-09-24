@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.LikesDao;
@@ -47,25 +46,15 @@ public class FilmService {
     }
 
     public void addLike(Integer filmId, Integer userId) {
-        try {
-            User user = userStorage.getUser(userId); // Проверка
-            Film film = filmStorage.getFilm(filmId);
-        } catch (NotFoundException e) {
-            log.warn("Catch NotFoundException.");
-            throw e;
-        }
+        User user = userStorage.getUser(userId); // Проверка
+        Film film = filmStorage.getFilm(filmId);
         log.debug("User (id={}) and film (id={}) exists.", userId, filmId);
         likesDao.addLike(filmId, userId);
     }
 
     public void deleteLike(Integer filmId, Integer userId) {
-        try {
-            User user = userStorage.getUser(userId); // Проверка
-            Film film = filmStorage.getFilm(filmId);
-        } catch (NotFoundException e) {
-            log.warn("Catch NotFoundException.");
-            throw e;
-        }
+        User user = userStorage.getUser(userId); // Проверка
+        Film film = filmStorage.getFilm(filmId);
         log.debug("User (id={}) and film (id={}) exists.", userId, filmId);
         likesDao.deleteLike(filmId, userId);
     }

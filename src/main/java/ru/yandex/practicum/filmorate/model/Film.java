@@ -24,9 +24,8 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private long duration;
-
-    private Integer rate = 0; //Аннотация @NotNull была бы лучше, но с ней не проходятся тесты в postman
-    //Поле обновляется при создании и обновлении фильма исходя из данных в таблице film_likes
+    @NotNull
+    private Integer rate = 0;
     private MPA mpa;
     private List<Genre> genres;
 

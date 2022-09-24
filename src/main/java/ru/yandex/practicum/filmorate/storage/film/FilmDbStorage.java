@@ -34,6 +34,7 @@ public class FilmDbStorage implements FilmStorage {
         List<Film> films = jdbc.query(sqlQuery, filmMapper);
         for (Film film : films) {
             film.setGenres(getFilmGenres(film.getId()));
+            film.setRate(getRating(film.getId()));
         }
         return films;
     }
@@ -45,6 +46,7 @@ public class FilmDbStorage implements FilmStorage {
             Film film = jdbc.queryForObject(sqlQuery, filmMapper, filmId);
             if (film != null) {
                 film.setGenres(getFilmGenres(filmId));
+                film.setRate(getRating(film.getId()));
             }
             return film;
         } else {
